@@ -1,0 +1,7 @@
+RewriteEngine on
+RewriteBase /ayusfashion/trunk/
+
+RewriteCond $1 !^(index\.php|images|robots\.txt|css|js|fonts|eof|ttf)
+RewriteRule ^(.*)$ /ayusfashion/trunk/index.php/$1 [L]
+
+php_flag short_open_tag On
