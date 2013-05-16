@@ -244,7 +244,7 @@ $config['encryption_key'] = 'ci-initial';
 | 'sess_time_to_update'		= how many seconds between CI refreshing Session Information
 |
 */
-$config['sess_cookie_name']		= 'ci_session';
+$config['sess_cookie_name']		= 'ayusfashion';
 $config['sess_expiration']		= 7200;
 $config['sess_expire_on_close']	= FALSE;
 $config['sess_encrypt_cookie']	= FALSE;
@@ -294,8 +294,8 @@ $config['global_xss_filtering'] = TRUE;
 | 'csrf_expire' = The number in seconds the token should expire.
 */
 $config['csrf_protection'] = TRUE;
-$config['csrf_token_name'] = 'csrf_test_name';
-$config['csrf_cookie_name'] = 'csrf_cookie_name';
+$config['csrf_token_name'] = 'ayusfashion_csrf_token';
+$config['csrf_cookie_name'] = 'ayusfashion_cookie';
 $config['csrf_expire'] = 7200;
 
 /*

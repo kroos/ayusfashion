@@ -81,7 +81,7 @@ $autoload['helper'] = array('form', 'url', 'template_inheritance', 'date', 'pass
 |
 */
 
-$autoload['config'] = array('ci-initial');
+$autoload['config'] = array('omsII');
 
 
 /*
