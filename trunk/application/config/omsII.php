@@ -28,6 +28,12 @@ $config['from'] = 'admin@isms.com';						//this might probably differ from $conf
 $config['from_name'] = 'Admin';							//example [GM]Cabal
 
 #############################################################################################
+//Facebook
+$config['facebook'] = 'https://www.facebook.com/ayusfashion1';
+
+//Twitter
+$config['twitter'] = 'http://twitter.com/ayusfashion';
+
 #############################################################################################
 #############################################################################################
 #############################################################################################
@@ -39,5 +45,5 @@ $config['from_name'] = 'Admin';							//example [GM]Cabal
 #############################################################################################
 #############################################################################################
 
-/* End of file iptips.php */
-/* Location: ./application/config/iptips.php */
+/* End of file omsII.php */
+/* Location: ./application/config/omsII.php */
