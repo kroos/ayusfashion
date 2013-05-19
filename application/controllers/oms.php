@@ -1,7 +1,7 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 
 class Oms extends CI_Controller
-	{
+{
 		//contructor => default utk semua function dlm controller nih...
 		public function __construct()
 			{
@@ -10,7 +10,7 @@ class Oms extends CI_Controller
 				//$this->load->model('model1');				//nak tau controller ni pakai model mana 1...
 
 				//helper
-				$this->load->helper(array('url', 'template_inheritance'));
+				$this->load->helper(array('url', 'template_inheritance', 'date'));
 
 				//mesti ikut peraturan ni..
 				//user mesti log on kalau tidak redirect to index
@@ -36,12 +36,95 @@ class Oms extends CI_Controller
 		public function hubungi_kami()
 			{
 				//load helper
-				$this->load->helper(array('form'));
+				$this->load->helper(array('form', 'captcha'));
 
 				//load library
 				$this->load->library(array('form_validation', 'phpmailer/Phpmailer', 'ckeditor/Ckeditor5'));
 
-				$this->load->view('hubungi_kami');
+				//load database
+				$this->load->database();
+
+				//load model
+				$this->load->model(array('captcha'));
+
+				$vals = array
+					(
+						'word' => rand(10000, 99999),
+						'img_path' => './images/captcha/',
+						'img_url' => base_url().'images/captcha/',
+						//'font_path' => './path/to/fonts/texb.ttf',
+						'img_width' => 150,
+						'img_height' => 30,
+						'expiration' => 1800
+					);
+				$data['cap'] = create_captcha($vals);
+				//echo $data['cap']['word'];
+				$this->captcha->insert_captcha($data['cap']['time'], $data['cap']['word']);
+
+				$this->form_validation->set_error_delimiters('<font color="#FF0000">', '</font>');
+				if ($this->form_validation->run() === TRUE)
+					{
+						if ($this->input->post('submit', TRUE))
+							{
+								$nama = $this->input->post('username', TRUE);
+								$email = $this->input->post('email', TRUE);
+								$mesej = $this->input->post('editor', TRUE);
+								$verify = $this->input->post('verify', TRUE);
+
+								//we need to check the capthca
+								$expiration = time()-1800; // Two hour limit
+								//delete captcha 2 hours ago
+								$this->captcha->delete_captcha($expiration);
+
+								//check the new 1
+								$check = $this->captcha->captcha($verify, $expiration)->num_rows();
+
+								if ($check == 0)
+									{
+										$data['info'] = 'You must submit the word that appears in the image';
+									}
+									else
+									{
+										$subject = 'Hubungi kami dari '.site_url();
+
+										//process phpmailer
+										$this->load->library('phpmailer/Pop3');
+										$this->pop3->Authorise($this->config->item('pop3_server'), $this->config->item('pop3_port'), 30, $this->config->item('username'), $this->config->item('password'), 1);
+
+										$this->phpmailer->IsSMTP();
+										$this->phpmailer->SMTPDebug  = 0;																	//debug = 0 (no debug), 1 = errors and messages, 2 = messages only
+										$this->phpmailer->SMTPAuth   = $this->config->item('SMTP_auth');									//enable SMTP authentication, TRUE or FALSE
+										$this->phpmailer->Host       = $this->config->item('smtp_server');									//smtp server
+										$this->phpmailer->Port       = $this->config->item('smtp_port');									//change this port if you are using different port than mine
+										$this->phpmailer->SMTPSecure = $this->config->item('SMTP_Secure');									//tls or ssl
+
+										$this->phpmailer->Username   = $this->config->item('username');										//email account username
+										$this->phpmailer->Password   = $this->config->item('password');										//email account password
+
+										$this->phpmailer->AddReplyTo($email, $nama);														//reply from who
+										$this->phpmailer->SetFrom($email, $nama);															//from who?
+										$this->phpmailer->AddAddress($this->config->item('from'), $this->config->item('from_name'));		//recipient
+
+										$this->phpmailer->IsHTML(TRUE);
+										$this->phpmailer->Subject = 'Hubungi kami dari '.site_url();
+										$this->phpmailer->MsgHTML($mesej);
+										$this->phpmailer->AltBody    = "To view the message, please use an HTML compatible email viewer!";	// optional, comment out and test
+
+										if (!$this->phpmailer->Send())
+											{
+												$data['info'] = $this->phpmailer->ErrorInfo;
+												$this->captcha->delete(array('word' => $vals['word']));
+											}
+											else
+											{
+												$data['info'] = 'Success sending email';
+												$this->captcha->delete(array('word' => $verify));
+												//echo $vals['word'];
+											}
+									}
+							}
+					}
+				$this->load->view('hubungi_kami', $data);
 			}
 
 		public function senarai_agen()
@@ -61,7 +144,7 @@ class Oms extends CI_Controller
 
 		public function ayus_di_media()
 			{
-			
+				$this->load->view('ayus_di_media');
 			}
 
 		public function order_status()
@@ -69,14 +152,59 @@ class Oms extends CI_Controller
 			
 			}
 
-		public function register()
+		public function daftar()
+			{
+			
+			}
+
+		public function lupa_kata_laluan()
 			{
 			
 			}
 
 		public function login()
 			{
-				$this->load->library('session');
+				//load helper
+				$this->load->helper(array('form', 'password'));
+				
+				//load library
+				$this->load->library(array('session', 'form_validation'));
+				
+				//load database
+				$this->load->database();
+				
+				//load model
+				$this->load->model(array('client'));
+
+				$this->form_validation->set_error_delimiters('<font color="#FF0000">', '</font>');
+				if ($this->form_validation->run() === TRUE)
+					{
+						if ($this->input->post('login', TRUE))
+							{
+								$user = $this->input->post('usrnm', TRUE);
+								$pass = $this->input->post('pswd', TRUE);
+
+								$ro = $this->client->GetWhere(array('username' => $user, 'password' => $pass), NULL, NULL);
+								if($ro->num_rows() == 1)
+									{
+										$session = array
+														(
+															'id_user' => $ro->row()->client_id,
+															'username' => $user,
+															'password' => $pass,
+															'logged_in' => TRUE,
+														);
+
+										$this->session->set_userdata($session);
+										redirect('afa/index', 'location');
+									}
+									else
+									{
+										$data['info'] = 'Username dan Password tidak sama.';
+									}
+							}
+					}
+				$this->load->view('log_masuk', @$data);
 			}
 
 ###############################################################################################################
@@ -85,7 +213,33 @@ class Oms extends CI_Controller
 			{
 				$this->load->view('error/show404');
 			}
+
+###############################################################################################################
+//Logout
+		public function logout()
+			{
+				if ($this->session->userdata('logged_in') === TRUE)
+					{
+						//process
+						$array = array 
+								(
+									'id_user' => '',
+									'username' => '',
+									'password' => '',
+									'logged_in' => FALSE
+								);
+						$this->session->unset_userdata($array);
+						redirect('', 'location');
+					}
+					else
+					{
+						redirect('', 'location');
+					}
+			}
+
+###############################################################################################################
+
 	}
 
-/* End of file welcome.php */
-/* Location: ./application/controllers/welcome.php */
+/* End of file oms.php */
+/* Location: ./application/controllers/oms.php */

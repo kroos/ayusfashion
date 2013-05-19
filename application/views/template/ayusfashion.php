@@ -17,7 +17,16 @@
 <script type="text/javascript" src="<?=base_url()?>js/top_up-min.js"></script>
 </head>
 <body>
+<script>
+	$(function() {
+		$( "input[type=submit], a, button", ".demo" )
+			.button();
+		$( "#radioset" ).buttonset();
 
+		// Datepicker
+		$('#datepicker1').datetimepicker({dateFormat: "yy-mm-dd", timeFormat: "hh:mm:ss", showSecond: true, showMillisec: false, ampm: false, stepHour: 1, stepMinute: 1, stepSecond: 5});
+	});
+</script>
 <div id='header'>
 <h1>Ayus Fashion, Korset Pembentukan Badan Murah untuk Kurus Cepat</h1>
 </div>
@@ -43,7 +52,7 @@
 
 <div id='footer'></div>
 
-<div id="mnfooter">&copy; 2013 Ayus Fashion, Korset Pembentukan Badan Murah untuk Kurus Cepat.<br />Page rendered in <strong>{elapsed_time}</strong> seconds using <strong>{memory_usage}</strong></div>
+<div id="mnfooter">&copy; <?=mdate("%Y", mysql_to_unix(now()))?> Ayus Fashion, Korset Pembentukan Badan Murah untuk Kurus Cepat.<br />Page rendered in <strong>{elapsed_time}</strong> seconds using <strong>{memory_usage}</strong></div>
 <noscript>
 <div id="noscript-warning">The Javascript was disabled on your browser!. Please enable it to continue.</div>
 </noscript>

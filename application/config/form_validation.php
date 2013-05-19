@@ -18,12 +18,12 @@ $config = array	(
 */
 ##################################################################################################
 $config = array	( 
-					'welcome/emailer' => array
+					'oms/hubungi_kami' => array
 					( 
 						array
 							(
-								'field' => 'name',
-								'label' => 'Name',
+								'field' => 'username',
+								'label' => 'Nama',
 								'rules' => 'trim|required|max_length[50]|xss_clean'
 							),
 						array
@@ -34,17 +34,32 @@ $config = array	(
 							),
 						array
 							(
-								'field' => 'subject',
-								'label' => 'Subject',
-								'rules' => 'trim|required|max_length[255]|xss_clean'
+								'field' => 'editor',
+								'label' => 'Mesej',
+								'rules' => 'trim|required|xss_clean'
 							),
 						array
 							(
-								'field' => 'editor',
-								'label' => 'Email Text',
-								'rules' => 'trim|required|xss_clean'
+								'field' => 'verify',
+								'label' => 'Pengesahan Imej',
+								'rules' => 'trim|required|exact_length[5]|is_natural|xss_clean'
+							)
+					),
+					'oms/login' => array
+					( 
+						array
+							(
+								'field' => 'usrnm',
+								'label' => 'Username',
+								'rules' => 'trim|required|max_length[50]|xss_clean'
 							),
-					)
+						array
+							(
+								'field' => 'pswd',
+								'label' => 'Password',
+								'rules' => 'trim|required|max_length[50]|xss_clean'
+							)
+					),
 				);
 /* End of file form_validator.php */
 /* Location: ./application/config/form_validator.php */

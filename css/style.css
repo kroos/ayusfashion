@@ -34,7 +34,11 @@ blockquote { padding:10px; background-color: #faebbc; border-top: 1px solid #e1c
 .auto-style2 {
 	border-width: 0px;
 }
-
+.info
+	{
+		color:#FF0000;
+		text-align:center;
+	}
 
 
 #footer { display:block; width:900px; height:148px; background:url(../images/af/4f0d72d12b0f6footer.jpg); margin:0 auto 19px auto;}
