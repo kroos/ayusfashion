@@ -85,8 +85,6 @@ class Oms extends CI_Controller
 									}
 									else
 									{
-										$subject = 'Hubungi kami dari '.site_url();
-
 										//process phpmailer
 										$this->load->library('phpmailer/Pop3');
 										$this->pop3->Authorise($this->config->item('pop3_server'), $this->config->item('pop3_port'), 30, $this->config->item('username'), $this->config->item('password'), 1);
@@ -147,32 +145,139 @@ class Oms extends CI_Controller
 				$this->load->view('ayus_di_media');
 			}
 
-		public function order_status()
-			{
-			
-			}
-
 		public function daftar()
 			{
-			
+				//load helper
+				$this->load->helper(array('form', 'captcha'));
+
+				//load library
+				$this->load->library(array('form_validation'));
+
+				//load database
+				$this->load->database();
+
+				//load model
+				$this->load->model(array('captcha', 'client'));
+
+				$vals = array
+					(
+						'word' => rand(10000, 99999),
+						'img_path' => './images/captcha/',
+						'img_url' => base_url().'images/captcha/',
+						//'font_path' => './path/to/fonts/texb.ttf',
+						'img_width' => 150,
+						'img_height' => 30,
+						'expiration' => 1800
+					);
+				$data['cap'] = create_captcha($vals);
+				//echo $data['cap']['word'];
+				$this->captcha->insert_captcha($data['cap']['time'], $data['cap']['word']);
+
+				$this->form_validation->set_error_delimiters('<font color="#FF0000">', '</font>');
+				if ($this->form_validation->run() === TRUE)
+					{
+						if ($this->input->post('submit', TRUE))
+							{
+								$nama = $this->input->post('username', TRUE);
+							}
+					}
+				$this->load->view('daftar', @$data);
 			}
 
 		public function lupa_kata_laluan()
 			{
-			
+				//load helper
+				$this->load->helper(array('form'));
+
+				//load library
+				$this->load->library(array('phpmailer/Phpmailer', 'form_validation'));
+
+				//load database
+				$this->load->database();
+
+				//load model
+				$this->load->model(array('client'));
+
+				$this->form_validation->set_error_delimiters('<font color="#FF0000">', '</font>');
+				if ($this->form_validation->run() === TRUE)
+					{
+						if ($this->input->post('send', TRUE))
+							{
+								$emntel = $this->input->post('ntel', TRUE);
+								$re = $this->client->GetWhere("phone_client = '$emntel' OR email_client = '$emntel'", NULL, NULL);
+								//echo $this->db->last_query();
+								if($re->num_rows() == 1)
+									{
+										if($re->row()->email_client)
+											{
+												//echo $re->num_rows();
+												$msg = "
+												<p>Terima kasih ".$re->row()->client." kerana menjadi pelanggan kami. Kami mendoakan anda mencapai impian anda dalam masa yang singkat.</p>
+												<p>&nbsp;</p>
+												<p>Berikut adalah butir maklumat anda :</p>
+												<p>Username : ".$re->row()->username."</p>
+												<p>Password : ".$re->row()->password."</p>
+												<p>Layarilah ".anchor(site_url(), 'laman web kami')." untuk maklumat terkini mengenai produk dan juga promosi yang sedang dan akan berlangsung.</p>
+												<p>&nbsp;</p>
+												<p>Sekian, terima kasih.</p>";
+
+												//process phpmailer
+												$this->load->library('phpmailer/Pop3');
+												$this->pop3->Authorise($this->config->item('pop3_server'), $this->config->item('pop3_port'), 30, $this->config->item('username'), $this->config->item('password'), 1);
+
+												$this->phpmailer->IsSMTP();
+												$this->phpmailer->SMTPDebug  = 0;																	//debug = 0 (no debug), 1 = errors and messages, 2 = messages only
+												$this->phpmailer->SMTPAuth   = $this->config->item('SMTP_auth');									//enable SMTP authentication, TRUE or FALSE
+												$this->phpmailer->Host       = $this->config->item('smtp_server');									//smtp server
+												$this->phpmailer->Port       = $this->config->item('smtp_port');									//change this port if you are using different port than mine
+												$this->phpmailer->SMTPSecure = $this->config->item('SMTP_Secure');									//tls or ssl
+
+												$this->phpmailer->Username   = $this->config->item('username');										//email account username
+												$this->phpmailer->Password   = $this->config->item('password');										//email account password
+
+												$this->phpmailer->AddReplyTo($this->config->item('from'), $this->config->item('from_name'));		//reply from who
+												$this->phpmailer->SetFrom($this->config->item('from'), $this->config->item('from_name'));			//from who?
+												$this->phpmailer->AddAddress($re->row()->email_client, $re->row()->client);														//recipient
+
+												$this->phpmailer->IsHTML(TRUE);
+												$this->phpmailer->Subject = 'Kata Laluan dari '.$this->config->item('title');
+												$this->phpmailer->MsgHTML($msg);
+												$this->phpmailer->AltBody = "To view the message, please use an HTML compatible email viewer!";	// optional, comment out and test
+
+												if (!$this->phpmailer->Send())
+													{
+														$data['info'] = $this->phpmailer->ErrorInfo;
+													}
+													else
+													{
+														$data['info'] = 'Success sending email';
+													}
+											}
+											else
+											{
+												$data['info'] = 'Sila berhubung dengan kami melalui telefon kerana email anda tiada didalam sistem';
+											}
+									}
+									else
+									{
+										$data['info'] = 'Maaf. Nombor telefon atau email anda tidak dapat dijumpai dalam sistem.';
+									}
+							}
+					}
+				$this->load->view('lupa_kata_laluan', @$data);
 			}
 
 		public function login()
 			{
 				//load helper
 				$this->load->helper(array('form', 'password'));
-				
+
 				//load library
 				$this->load->library(array('session', 'form_validation'));
-				
+
 				//load database
 				$this->load->database();
-				
+
 				//load model
 				$this->load->model(array('client'));
 
