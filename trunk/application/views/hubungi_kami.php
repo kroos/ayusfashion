@@ -1,6 +1,8 @@
 <? extend('template/nav.php') ?>
 
 <? startblock('content') ?>
+<h2>Hubungi Kami</h2>
+<p>Gunakan borang ini untuk mengajukan sebarang pertanyaan anda pada kami</p>
 <p align="center"><font color="#FF0000"><?=@$info?></font></p>
 <?=form_open()?>
 

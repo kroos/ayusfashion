@@ -8,7 +8,6 @@
 <li><?=anchor('oms/faq', 'FAQ', array('title' => 'FAQ'))?></li>
 <li><?=anchor('oms/testimoni', 'Testimoni', array('title' => 'Testimoni'))?></li>
 <li><?=anchor('oms/ayus_di_media', 'Ayus di Media', array('title' => 'Ayus di Media'))?></li>
-<li><?=anchor('oms/order_status', 'Order Status', array('title' => 'Order Status'))?></li>
 <li><?=anchor('oms/login', 'Log Masuk', array('title' => 'Log Masuk'))?></li>
 <? endblock() ?>
 
