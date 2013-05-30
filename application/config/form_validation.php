@@ -105,7 +105,7 @@ $config = array	(
 							(
 								'field' => 'phone',
 								'label' => 'Telefon Bimbit',
-								'rules' => 'trim|required|is_unique[client.phone_client]|is_natural|xss_clean'
+								'rules' => 'trim|required|is_unique[client.phone_client]|is_natural|exact_length[10]|xss_clean'
 							),
 						array
 							(
@@ -130,6 +130,78 @@ $config = array	(
 								'field' => 'verify',
 								'label' => 'Pengesahan Imej',
 								'rules' => 'trim|required|exact_length[5]|is_natural_no_zero|xss_clean'
+							),
+					),
+					'oms/detail' => array
+					( 
+						array
+							(
+								'field' => 'qty',
+								'label' => 'Quantity',
+								'rules' => 'trim|required|max_length[5]|is_natural|xss_clean'
+							),
+					),
+					'afa/checkout' => array
+					( 
+						array
+							(
+								'field' => 'bank',
+								'label' => 'Bank',
+								'rules' => 'trim|required|is_natural|xss_clean'
+							),
+						array
+							(
+								'field' => 'total_payment',
+								'label' => 'Jumlah',
+								'rules' => 'trim|required|decimal|xss_clean'
+							),
+						array
+							(
+								'field' => 'mode_payment',
+								'label' => 'Mode Pembayaran',
+								'rules' => 'trim|required|max_length[5]|is_natural|xss_clean'
+							),
+						array
+							(
+								'field' => 'date',
+								'label' => 'Tarikh',
+								'rules' => 'trim|required|xss_clean'
+							),
+						array
+							(
+								'field' => 'ref_no',
+								'label' => 'No Rujukan',
+								'rules' => 'trim|required|xss_clean'
+							),
+						array
+							(
+								'field' => 'name',
+								'label' => 'Nama (Optional)',
+								'rules' => 'trim|alpha|xss_clean'
+							),
+						array
+							(
+								'field' => 'address',
+								'label' => 'Alamat (Optional)',
+								'rules' => 'trim|xss_clean'
+							),
+						array
+							(
+								'field' => 'phone',
+								'label' => 'Telefon (Optional)',
+								'rules' => 'trim|numeric|xss_clean'
+							),
+						array
+							(
+								'field' => 'email',
+								'label' => 'Email (Optional)',
+								'rules' => 'trim|valid_email|xss_clean'
+							),
+						array
+							(
+								'field' => 'info',
+								'label' => 'Info Tambahan',
+								'rules' => 'trim|xss_clean'
 							),
 					),
 				);

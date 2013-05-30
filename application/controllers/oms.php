@@ -7,19 +7,16 @@ class Oms extends CI_Controller
 			{
 				parent::__construct();
 
-				//$this->load->model('model1');				//nak tau controller ni pakai model mana 1...
-
 				//helper
 				$this->load->helper(array('url', 'template_inheritance', 'date'));
 
-				//mesti ikut peraturan ni..
-				//user mesti log on kalau tidak redirect to index
-				/*
-				if ($this->session->userdata('logged_in') === FALSE)
+				//load library
+				$this->load->library(array('session'));
+
+/* 				if ($this->session->userdata('logged_in') === TRUE)
 					{
-						redirect('/welcome/index', 'location');
-					}
-				//*/
+						redirect('/afa/buy', 'location');
+					} */
 			}
 ###############################################################################################################
 
@@ -28,11 +25,120 @@ class Oms extends CI_Controller
 				$this->load->view('home');
 			}
 
+###############################################################################################################
+//shopping cart
 		public function beli_sekarang()
 			{
-				$this->load->view('beli_sekarang');
+				//load library
+				$this->load->library(array('cart'));
+
+				//load database
+				$this->load->database();
+				
+				//load model
+				$this->load->model(array('item'));
+
+				//show products
+				$data['pro'] = $this->item->GetAll(NULL, NULL);
+				//echo $this->db->last_query();
+				$this->load->view('beli_sekarang', @$data);
 			}
 
+		public function detail()
+			{
+				//load library
+				$this->load->library(array('cart', 'form_validation'));
+
+				//load database
+				$this->load->database();
+				
+				//load model
+				$this->load->model(array('item', 'size'));
+
+				//load helper
+				$this->load->helper(array('form'));
+
+				// show the product and an "add to cart" link
+				$product_id = $this->uri->segment(3, 0);
+
+				if($product_id == NULL || $product_id == 0)
+					{
+						redirect('oms/beli_sekarang', 'location');
+					}
+					else
+					{
+						if(is_numeric($product_id))
+							{
+								$data['item'] = $this->item->GetWhere(array('item_id' => $product_id), NULL, NULL);
+								$data['size'] = $this->size->GetAll(NULL, NULL);
+							}
+					}
+
+				$this->form_validation->set_error_delimiters('<font color="#FF0000">', '</font>');
+				if ($this->form_validation->run() === TRUE)
+					{
+						if ($this->input->post('add', TRUE))
+							{
+								//add to cart
+								// add the selected product to the cart
+								$dataa = array
+										(
+											'id' => $this->input->post('product_id', TRUE),
+											'qty' => $this->input->post('qty', TRUE),
+											'price' => $this->input->post('product_price', TRUE),
+											'name' => $this->input->post('product_name', TRUE),
+											'options' => array
+															(
+																'size' => $this->input->post('size', TRUE)
+															)
+										);
+
+								//print_r($dataa);
+								$fp = $this->cart->insert($dataa);
+								if($fp)
+									{
+										redirect('oms/show_cart', 'location');
+									}
+							}
+					}
+				$this->load->view('detail', @$data);
+			}
+
+		function show_cart()
+			{
+				//load library
+				$this->load->library(array('cart'));
+
+				//load database
+				$this->load->database();
+				
+				//load model
+				$this->load->model(array('item', 'size'));
+
+				//load helper
+				$this->load->helper(array('form'));
+
+				//$this->form_validation->set_error_delimiters('<font color="#FF0000">', '</font>');
+				//if ($this->form_validation->run() === TRUE)
+				//	{
+						if ($this->input->post('update', TRUE))
+							{
+								for ($i = 1; $i <= $this->cart->total_items(); $i++)
+									{
+											$item = $this->input->post($i, TRUE);
+											$dataa = array(
+													'rowid' => $item['rowid'], 
+													'qty' => $item['qty']
+											);
+											$this->cart->update($dataa);
+									}
+							}
+				//	}
+				$data['cart'] = $this->cart->contents();
+				$this->load->view('show_cart', @$data);
+			}
+
+###############################################################################################################
 		public function hubungi_kami()
 			{
 				//load helper
@@ -82,6 +188,7 @@ class Oms extends CI_Controller
 								if ($check == 0)
 									{
 										$data['info'] = 'You must submit the word that appears in the image';
+										$this->captcha->delete(array('word' => $vals['word']));
 									}
 									else
 									{
@@ -176,9 +283,54 @@ class Oms extends CI_Controller
 				$this->form_validation->set_error_delimiters('<font color="#FF0000">', '</font>');
 				if ($this->form_validation->run() === TRUE)
 					{
-						if ($this->input->post('submit', TRUE))
+						if ($this->input->post('reg', TRUE))
 							{
-								$nama = $this->input->post('username', TRUE);
+								$nama = ucwords(strtolower($this->input->post('nama', TRUE)));
+								$pass2 = $this->input->post('pass2', TRUE);
+								$alamat = ucwords(strtolower($this->input->post('alamat', TRUE)));
+								$phone = $this->input->post('phone', TRUE);
+								$email = $this->input->post('email', TRUE);
+								$fb = $this->input->post('fb', TRUE);
+								$twitter = $this->input->post('twitter', TRUE);
+								$verify = $this->input->post('verify', TRUE);
+								$username = $this->input->post('username', TRUE);
+
+								//we need to check the capthca
+								$expiration = time()-1800; // Two hour limit
+								//delete captcha 2 hours ago
+								$this->captcha->delete_captcha($expiration);
+
+								//check the new 1
+								$check = $this->captcha->captcha($verify, $expiration)->num_rows();
+
+								if ($check == 0)
+									{
+										$data['info'] = 'You must submit the word that appears in the image';
+										//$this->captcha->delete(array('word' => $vals['word']));
+									}
+									else
+									{
+										$client = $this->client->insert(array('client' => $nama, 'username' => $username, 'password' => $pass2, 'address_client' => $alamat, 'phone_client' => $phone, 'email_client' => $email, 'facebook_id_client' => $fb, 'twitter_id_client' => $twitter, 'group_id' => 2));
+										if($client)
+											{
+												$session = array
+																(
+																	'id_user' => $this->db->insert_id(),
+																	'username' => $username,
+																	'password' => $pass2,
+																	'logged_in' => TRUE
+																);
+		
+												$this->session->set_userdata($session);
+												redirect('afa/index', 'location');
+												$this->captcha->delete(array('word' => $verify));
+												//$data['info'] = 'OK';
+											}
+											else
+											{
+												$data['info'] = 'Maaf. Sila cuba sebentar lagi';
+											}
+									}
 							}
 					}
 				$this->load->view('daftar', @$data);
@@ -273,7 +425,7 @@ class Oms extends CI_Controller
 				$this->load->helper(array('form', 'password'));
 
 				//load library
-				$this->load->library(array('session', 'form_validation'));
+				$this->load->library(array('form_validation', 'cart'));
 
 				//load database
 				$this->load->database();
@@ -301,7 +453,14 @@ class Oms extends CI_Controller
 														);
 
 										$this->session->set_userdata($session);
-										redirect('afa/index', 'location');
+										if(count($this->cart->total_items()) < 1)
+											{
+												redirect('oms/beli_sekarang', 'location');
+											}
+											else
+											{
+												redirect('afa/checkout', 'location');
+											}
 									}
 									else
 									{

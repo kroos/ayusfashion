@@ -9,12 +9,10 @@
 	<meta name="author" content="Zaugola" />
 	<link rel="shortcut icon" href="<?=base_url()?>images/favicon.ico" type="image/x-icon" />
 
-	<link rel="stylesheet" type="text/css" href="<?=base_url()?>css/jquery/jquery-ui-1.9.1.custom.css" />
-	<script src="<?=base_url()?>js/jquery/jquery-1.8.2.js"></script>
-	<script src="<?=base_url()?>js/jquery/jquery-ui-1.9.1.custom.js"></script>
-	<script type="text/javascript" src="<?=base_url()?>js/jquery/jquery-ui-timepicker-addon.js"></script>
-
-<script type="text/javascript" src="<?=base_url()?>js/top_up-min.js"></script>
+		<link rel="stylesheet" type="text/css" href="<?=base_url()?>css/jquery/jquery-ui-1.9.1.custom.css" />
+		<script src="<?=base_url()?>js/jquery/jquery-1.8.2.js"></script>
+		<script src="<?=base_url()?>js/jquery/jquery-ui-1.9.1.custom.js"></script>
+		<script type="text/javascript" src="<?=base_url()?>js/jquery/jquery-ui-timepicker-addon.js"></script>
 </head>
 <body>
 <script>
@@ -27,6 +25,9 @@
 		$('#datepicker1').datetimepicker({dateFormat: "yy-mm-dd", timeFormat: "hh:mm:ss", showSecond: true, showMillisec: false, ampm: false, stepHour: 1, stepMinute: 1, stepSecond: 5});
 	});
 </script>
+	<? start_block_marker('jquery') ?>
+
+	<? end_block_marker() ?>
 <div id='header'>
 <h1>Ayus Fashion, Korset Pembentukan Badan Murah untuk Kurus Cepat</h1>
 </div>

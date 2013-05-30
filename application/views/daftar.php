@@ -3,7 +3,7 @@
 <? startblock('content') ?>
 <h2>Pendaftaran</h2>
 <p></p>
-<p align="center"><font color="#FF0000"><?=@$info?></font></p>
+<div class='info'><?=@$info?></div>
 <?=form_open()?>
 
 <table width="100%" border="0" cellspacing="2" cellpadding="2">
