@@ -39,6 +39,7 @@
 */
 
 $route['default_controller'] = 'oms';
+$route['oms/detail/(:num)'] = 'oms/detail';
 $route['404_override'] = 'oms/page_missing';
 
 

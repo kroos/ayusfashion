@@ -4,6 +4,9 @@ if ( ! defined('BASEPATH')) exit('No direct script access allowed');
 #############################################################################################
 //Website Meta
 $config['title'] = 'Ayus Fashion, Korset Pembentukan Badan Murah untuk Kurus Cepat';
+$config['stitle'] = 'AyusFashion.com';
+$config['logo'] = 'hubungi_01.jpg';					//logo should be located in the images folder. example : 'logo/mylogo.jpg'
+$config['reg_company'] = 'AS23412';					//company registration number otherwise put an empty string, ex : ''
 $config['desc'] = 'Korset dan Girdle untuk Kurus, Langsing dan Menghilangkan Perut Buncit';
 $config['keywords'] = 'korset ayus, Corsets, Girdle,Premium Beautiful, slimming shaper,baju raya, baju kebaya moden';
 

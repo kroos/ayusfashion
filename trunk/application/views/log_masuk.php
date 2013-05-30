@@ -2,6 +2,8 @@
 
 <? startblock('content') ?>
 <h2>Log Masuk</h2>
+<p>Kami mengucapkan ribuan terima kasih kepada anda kerana anda telah mengambil 1 step untuk berusaha kearah kebahagiaan anda. Sila login untuk meneruskan pembelian</p>
+<p>Sekiranya anda masih lagi tidak mempunyai akaun, klik pada button "Belum mempunyai akaun dengan kami?"</p>
 <div class='info'><?=@$info?></div>
 <?=form_open()?>
 <table width="100%" border="0" cellspacing="2" cellpadding="2">
