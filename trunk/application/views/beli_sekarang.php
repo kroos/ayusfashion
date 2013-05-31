@@ -23,7 +23,7 @@ if ($this->session->userdata('logged_in') === TRUE)
   <?foreach($pro->result() AS $pr):?>
   <tr>
     <td valign="center"><img src="<?=base_url()?>images/items/<?=($pr->pict == NULL) ? 'item.jpg' : $pr->pict?>" width="100" height="100" /></td>
-    <td valign="center"><?=anchor('oms/detail/'.$pr->item_id, $pr->item)?></td>
+    <td valign="center"><div class="demo"><?=anchor('oms/detail/'.$pr->item_id, $pr->item)?></div></td>
     <td valign="center"><?=$pr->short_desc?></td>
     <td valign="center"><?=$pr->price?></td>
   </tr>
