@@ -30,7 +30,7 @@
     <td><?=$ty->row()->twitter_id_client?></td>
   </tr>
   <tr>
-    <th scope="row" align="right"><div class="demo"><?=anchor('afa/kemaskini', 'Kemaskini Profail')?></div></th>
+    <th scope="row" align="right"><div class="demo"><?=anchor('afa/kemaskini', 'Kemaskini Profail').anchor('afa/tukar_katalaluan', 'Tukar KataLaluan')?></div></th>
     <td>&nbsp;</td>
   </tr>
 </table>
@@ -47,7 +47,7 @@
 	</tr>
 	<?foreach($tw->result() AS $uy):?>
 		<tr>
-			<td><div class="demo"><?=anchor('afa/invoice/'.$uy->order_my_id, $uy->order_my_id)?></div></td>
+			<td><div class="demo"><?=anchor('afa/invoice/'.$uy->order_my_id, $uy->order_my_id, 'target="_blank"')?></div></td>
 			<td><?=datetime_view($uy->date_order)?></td>
 			<td>
 				<table width="100%" border="0" cellspacing="2" cellpadding="2">

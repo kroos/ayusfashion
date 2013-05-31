@@ -81,7 +81,7 @@ $config = array	(
 							(
 								'field' => 'username',
 								'label' => 'Username',
-								'rules' => 'trim|required|is_unique[client.username]|alpha_dash|min_length[6]|max_length[10]|xss_clean'
+								'rules' => 'trim|required|is_unique[client.username]|alpha_numeric|min_length[6]|max_length[10]|xss_clean'
 							),
 						array
 							(
@@ -202,6 +202,72 @@ $config = array	(
 								'field' => 'info',
 								'label' => 'Info Tambahan',
 								'rules' => 'trim|xss_clean'
+							),
+					),
+					'afa/kemaskini' => array
+					( 
+						array
+							(
+								'field' => 'name',
+								'label' => 'Nama',
+								'rules' => 'trim|required|xss_clean'
+							),
+						array
+							(
+								'field' => 'address',
+								'label' => 'Alamat',
+								'rules' => 'trim|required|xss_clean'
+							),
+						array
+							(
+								'field' => 'phone',
+								'label' => 'Telefon Bimbit',
+								'rules' => 'trim|required|is_natural|exact_length[10]|xss_clean'
+							),
+						array
+							(
+								'field' => 'email',
+								'label' => 'Email',
+								'rules' => 'trim|required|valid_email|xss_clean'
+							),
+						array
+							(
+								'field' => 'fbook',
+								'label' => 'Facebook',
+								'rules' => 'trim|xss_clean'
+							),
+						array
+							(
+								'field' => 'twtr',
+								'label' => 'Twitter',
+								'rules' => 'trim|xss_clean'
+							),
+					),
+					'afa/tukar_katalaluan' => array
+					( 
+						array
+							(
+								'field' => 'username',
+								'label' => 'Username',
+								'rules' => 'trim|required|is_unique[client.username]|alpha_numeric|min_length[6]|max_length[10]|xss_clean'
+							),
+						array
+							(
+								'field' => 'oldpass',
+								'label' => 'Password Lama',
+								'rules' => 'trim|required|xss_clean'
+							),
+						array
+							(
+								'field' => 'pass1',
+								'label' => 'Password Baru',
+								'rules' => 'trim|required|min_length[6]|max_length[10]|xss_clean'
+							),
+						array
+							(
+								'field' => 'pass2',
+								'label' => 'Password Baru Sekali Lagi',
+								'rules' => 'trim|required|min_length[6]|max_length[10]|matches[pass1]|xss_clean'
 							),
 					),
 				);
