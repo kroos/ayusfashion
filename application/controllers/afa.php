@@ -40,6 +40,81 @@ class Afa extends CI_Controller
 				$this->load->view('user/home', @$data);
 			}
 
+		public function kemaskini()
+			{
+				$this->load->model('client');
+				$this->load->library('ckeditor/Ckeditor5');
+				$id = $this->session->userdata('id_user');
+				$this->form_validation->set_error_delimiters('<font color="#FF0000">', '</font>');
+				if ($this->form_validation->run() === TRUE)
+					{
+						if ($this->input->post('save', TRUE))
+							{
+								$client = $this->input->post('name', TRUE);
+								$address = $this->input->post('address', TRUE);
+								$phone = $this->input->post('phone', TRUE);
+								$email = $this->input->post('email', TRUE);
+								$fbook = $this->input->post('fbook', TRUE);
+								$twtr = $this->input->post('twtr', TRUE);
+
+								$hj = $this->client->update(array('client_id' => $id), array('client' => $client, 'address_client' => $address, 'phone_client' => $phone, 'email_client' => $email, 'facebook_id_client' => $fbook, 'twitter_id_client' => $twtr));
+								if($hj)
+									{
+										redirect('afa/index', 'location');
+									}
+									else
+									{
+										$data['info'] = 'Sila cuba sebentar lagi, kami tidak dapat mengemaskini data';
+									}
+							}
+					}
+				$data['ra'] = $this->client->GetWhere(array('client_id' => $id), NULL, NULL);
+				$this->load->view('user/kemaskini', $data);
+			}
+
+		public function tukar_katalaluan()
+			{
+				$this->load->model('client');
+				$id = $this->session->userdata('id_user');
+				$this->form_validation->set_error_delimiters('<font color="#FF0000">', '</font>');
+				if ($this->form_validation->run() === TRUE)
+					{
+						if ($this->input->post('save', TRUE))
+							{
+								$username = $this->input->post('username', TRUE);
+								$oldpass = $this->input->post('oldpass', TRUE);
+								$pass1 = $this->input->post('pass1', TRUE);
+								$pass2 = $this->input->post('pass2', TRUE);
+
+								if($oldpass == $this->session->userdata('password'))
+									{
+										$hj = $this->client->update(array('client_id' => $id), array('username' => $username, 'password' => $pass1));
+										$session = array
+														(
+															'username' => $username,
+															'password' => $pass1,
+														);
+										$this->session->set_userdata($session);
+		
+										if($hj)
+											{
+												redirect('afa/index', 'location');
+											}
+											else
+											{
+												$data['info'] = 'Sila cuba sebentar lagi, kami tidak dapat mengemaskini data';
+											}
+									}
+									else
+									{
+										$data['info'] = 'Sila cuba sebentar lagi, kami tidak dapat mengemaskini data';
+									}
+							}
+					}
+				$data['ra'] = $this->client->GetWhere(array('client_id' => $id), NULL, NULL);
+				$this->load->view('user/katalaluan', $data);
+			}
+
 		public function buy()
 			{
 				//load model
@@ -48,7 +123,6 @@ class Afa extends CI_Controller
 				//item part
 				$data['item'] = $this->item->GetAll(NULL, NULL);
 
-				
 				$this->load->view('user/buy', @$data);
 			}
 
