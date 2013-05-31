@@ -57,6 +57,15 @@ foreach($mode_payment->result() as $i)
 	<h3>Maklumat Pembayaran</h3>
 	<table border="0" width="100%">
 		<tr>
+			<td colspan="2" align="center"><img src="<?=base_url()?>images/ayusfashionbyr.jpg" /></td>
+		</tr>
+		<tr>
+			<td colspan="2" align="center">Maklumat pembayaran adalah seperti diatas</td>
+		</tr>
+		<tr>
+			<td colspan="2" align="center">&nbsp;</td>
+		</tr>
+		<tr>
 			<td align="right"><?=form_label('Bank<font color="#FF0000">*</font>', 'bank')?> : </td>
 			<td><?=form_dropdown('bank', $bank1, set_value('bank'), 'id="bank"')?></td>
 		</tr>

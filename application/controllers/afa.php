@@ -194,8 +194,8 @@ class Afa extends CI_Controller
 														//process phpmailer
 														$mesej =	"
 																	<p>Salam ".$rt->client.",</p>
-																	<p>Kami mengucapkan ribuan terima kasih atas pembelian anda. Kami dari ".$this->config->item('stitle')." mendoakan ".$rt->client."  mencapai impian melalui produk kami. Berikut adalah rujukan inbois untuk nama rujuk di website kami bagi mengetahui proses penghantaran.</p>
-																	<p>No Inbois : <b>".$oid."</b></p>
+																	<p>Kami mengucapkan ribuan terima kasih atas pembelian anda. Kami dari ".$this->config->item('stitle')." mendoakan ".$rt->client."  mencapai impian melalui produk kami. Berikut adalah rujukan Order No untuk ".$rt->client." rujuk di website kami bagi mengetahui proses penghantaran.</p>
+																	<p>Order No : <b>".$oid."</b></p>
 																	<p>Jangan lupa untuk berkongsi kisah kejayaan anda dengan kami selepas 30 hari!!!</p>
 																	<p>&nbsp;</p>
 																	<p>Salam sayang dari kami ".$this->config->item('stitle')."</p>
@@ -204,7 +204,7 @@ class Afa extends CI_Controller
 														$this->pop3->Authorise($this->config->item('pop3_server'), $this->config->item('pop3_port'), 30, $this->config->item('username'), $this->config->item('password'), 1);
 
 														$this->phpmailer->IsSMTP();
-														$this->phpmailer->SMTPDebug  = 0;																	//debug = 0 (no debug), 1 = errors and messages, 2 = messages only
+														$this->phpmailer->SMTPDebug  = 1;																	//debug = 0 (no debug), 1 = errors and messages, 2 = messages only
 														$this->phpmailer->SMTPAuth   = $this->config->item('SMTP_auth');									//enable SMTP authentication, TRUE or FALSE
 														$this->phpmailer->Host       = $this->config->item('smtp_server');									//smtp server
 														$this->phpmailer->Port       = $this->config->item('smtp_port');									//change this port if you are using different port than mine
@@ -220,7 +220,7 @@ class Afa extends CI_Controller
 														$this->phpmailer->IsHTML(TRUE);
 														$this->phpmailer->Subject = 'Inbois pembayaran dari '.$this->config->item('stitle');
 														$this->phpmailer->MsgHTML($mesej);
-														$this->phpmailer->AddAttachment('afa/invoice/'.$oid);										// attachment
+														//$this->phpmailer->AddAttachment(base_url.'afa/invoice/'.$oid, 'Invoice_'.$oid.'.pdf');												// attachment
 														$this->phpmailer->AltBody    = "To view the message, please use HTML compatible email viewer!";		// optional, comment out and test
 
 														if (!$this->phpmailer->Send())
