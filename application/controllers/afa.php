@@ -50,8 +50,8 @@ class Afa extends CI_Controller
 					{
 						if ($this->input->post('save', TRUE))
 							{
-								$client = $this->input->post('name', TRUE);
-								$address = $this->input->post('address', TRUE);
+								$client = ucwords(strtolower($this->input->post('name', TRUE)));
+								$address = ucwords(strtolower($this->input->post('address', TRUE)));
 								$phone = $this->input->post('phone', TRUE);
 								$email = $this->input->post('email', TRUE);
 								$fbook = $this->input->post('fbook', TRUE);

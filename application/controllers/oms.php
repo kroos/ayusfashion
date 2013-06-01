@@ -172,9 +172,9 @@ class Oms extends CI_Controller
 					{
 						if ($this->input->post('submit', TRUE))
 							{
-								$nama = $this->input->post('username', TRUE);
+								$nama = ucwords(strtolower($this->input->post('username', TRUE)));
 								$email = $this->input->post('email', TRUE);
-								$mesej = $this->input->post('editor', TRUE);
+								$mesej = ucwords(strtolower($this->input->post('editor', TRUE)));
 								$verify = $this->input->post('verify', TRUE);
 
 								//we need to check the capthca
