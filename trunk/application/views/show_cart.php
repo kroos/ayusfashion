@@ -11,7 +11,8 @@ if ($this->session->userdata('logged_in') === TRUE)
 
 <? startblock('content') ?>
 <h2>Show Cart</h2>
-<p>Anda boleh kemaskini bilangan barangan yang anda beli disini. Sila letakkan angka 0 untuk mengeluarkan barangan yang tidak berkenaan.</p>
+<p>Anda boleh kemaskini bilangan barangan yang anda beli disini. Sila letakkan angka 0 (kosong) untuk mengeluarkan barangan.</p>
+<p>Klik <strong>CheckOut</strong> apabila anda telah selesai</p>
 <p align="center"><font color="#FF0000"><?=@$info?></font></p>
 
 
@@ -60,6 +61,7 @@ if ($this->session->userdata('logged_in') === TRUE)
 <?endif?>
 
 <p><div class="demo"><?php echo form_submit('update', 'Update Your Cart').anchor('afa/checkout', 'CheckOut')?></div></p>
+<p>Klik <strong>CheckOut</strong> apabila anda telah selesai</p>
 <?=form_close()?>
 <? endblock() ?>
 
