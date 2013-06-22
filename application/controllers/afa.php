@@ -164,15 +164,16 @@ class Afa extends CI_Controller
 													//inserting into order_item
 													foreach($this->cart->contents() AS $key)
 														{
-															//echo $key['rowid'].'&nbsp;'.$key['id'].'&nbsp;'.$key['qty'].'&nbsp;'.$key['name'].'&nbsp;'.$key['price'].'&nbsp;'.$key['subtotal'].'&nbsp;'.$key['options'].'<br />';
+															//echo $key['rowid'].' rowid <br />'.$key['id'].' id <br />'.$key['qty'].' qty <br />'.$key['name'].' name <br />'.$key['price'].' price <br />'.$key['subtotal'].' subtotal <br />'.$key['options'].' options <br /><br />';
 															if ($this->cart->has_options($key['rowid']) == TRUE)
 																{
 																	foreach ($this->cart->product_options($key['rowid']) as $option_name => $option_value)
 																		{
-																			//echo $option_name.'&nbsp;'.$option_value.'<br />';
+																			//echo $option_name.' option_name <br />'.$option_value.' option_value <br /><br />';
+																			$this->order_item->insert(array('order_my_id' => $oid, 'item_id' => $key['id'], 'size_id' => $option_value, 'color_id' => 7, 'quantity' => $key['qty'], 'discount' => '0.00', 'total_price' => $key['subtotal']));
+																			//echo $this->db->last_query();
 																		}
 																}
-															$this->order_item->insert(array('order_my_id' => $oid, 'item_id' => $key['id'], 'size_id' => $option_value, 'color_id' => 10, 'quantity' => $key['qty'], 'discount' => '0.00', 'total_price' => $key['subtotal']));
 														}
 													//insert into payment_info
 													$this->payment_info->insert(array('order_my_id' => $oid, 'bank_id' => $post['bank'], 'total_payment' => $post['total_payment'], 'mode_payment_id' => $post['mode_payment'], 'date_payment' => $post['date'], 'ref_no' => $post['ref_no']));
@@ -186,9 +187,10 @@ class Afa extends CI_Controller
 															$this->feedback->insert(array('order_my_id' => $oid, 'comments' => $post['info']));
 														}
 												$this->db->trans_complete();
+
 												if ($this->db->trans_status() === TRUE)
 													{
-														$this->cart->destroy();
+														//$this->cart->destroy();
 														$rt = $this->client->GetWhere(array('client_id' => $this->session->userdata('id_user')), NULL, NULL)->row();
 														//send invoice
 														//process phpmailer
@@ -199,12 +201,13 @@ class Afa extends CI_Controller
 																	<p>Jangan lupa untuk berkongsi kisah kejayaan anda dengan kami selepas 30 hari!!!</p>
 																	<p>&nbsp;</p>
 																	<p>Salam sayang dari kami ".$this->config->item('stitle')."</p>
+																	<p>Sila jangan reply email ini. Anda boleh menghubungi kami di ayustrading@gmail.com</p>
 																	";
 														$this->load->library('phpmailer/Pop3');
 														$this->pop3->Authorise($this->config->item('pop3_server'), $this->config->item('pop3_port'), 30, $this->config->item('username'), $this->config->item('password'), 1);
 
 														$this->phpmailer->IsSMTP();
-														$this->phpmailer->SMTPDebug  = 1;																	//debug = 0 (no debug), 1 = errors and messages, 2 = messages only
+														$this->phpmailer->SMTPDebug  = 0;																	//debug = 0 (no debug), 1 = errors and messages, 2 = messages only
 														$this->phpmailer->SMTPAuth   = $this->config->item('SMTP_auth');									//enable SMTP authentication, TRUE or FALSE
 														$this->phpmailer->Host       = $this->config->item('smtp_server');									//smtp server
 														$this->phpmailer->Port       = $this->config->item('smtp_port');									//change this port if you are using different port than mine
@@ -230,6 +233,7 @@ class Afa extends CI_Controller
 															else
 															{
 																$data['info'] = 'Penghantaran email dan transaksi proses berjaya. Kami akan membuat penghantaran secepat mungkin selepas pembayaran disahkan.';
+																$this->cart->destroy();
 															}
 													}
 													else
